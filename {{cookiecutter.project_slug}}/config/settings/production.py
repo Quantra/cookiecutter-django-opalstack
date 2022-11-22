@@ -142,7 +142,6 @@ COLLECTFAST_STRATEGY = "collectfast.strategies.gcloud.GoogleCloudStrategy"
 STATIC_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/static/"
 {% else -%}
 STATIC_ROOT = f"/home/{OPALSTACK_SHELL_USER}/apps/{{cookiecutter.opalstack_static_app}}"
-MEDIA_ROOT = f"/home/{OPALSTACK_SHELL_USER}/apps/{{cookiecutter.opalstack_media_app}}"
 {% endif -%}
 
 # MEDIA
@@ -153,6 +152,8 @@ MEDIA_URL = f"https://{aws_s3_domain}/media/"
 {%- elif cookiecutter.cloud_provider == 'GCP' %}
 DEFAULT_FILE_STORAGE = "{{cookiecutter.project_slug}}.utils.storages.MediaRootGoogleCloudStorage"
 MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/media/"
+{% else -%}
+MEDIA_ROOT = f"/home/{OPALSTACK_SHELL_USER}/apps/{{cookiecutter.opalstack_media_app}}"
 {%- endif %}
 
 # EMAIL
