@@ -37,6 +37,10 @@
     "GCP",
     "None"
   ],
+  "cache": [
+    "memcached",
+    "redis"
+  ],
   "mail_service": [
     "Mailgun",
     "Amazon SES",

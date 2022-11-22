@@ -37,8 +37,20 @@ DATABASES["default"] = env.db("DATABASE_URL")  # noqa F405
 DATABASES["default"]["ATOMIC_REQUESTS"] = True  # noqa F405
 DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)  # noqa F405
 
+# OPALSTACK
+# ------------------------
+OPALSTACK_SHELL_USER = "{{cookiecutter.opalstack_shell_user}}"
+
 # CACHES
 # ------------------------------------------------------------------------------
+{% if cookiecutter.cache == "memcached" -%}
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': f'unix:/home/{OPALSTACK_SHELL_USER}/apps/{{cookiecutter.opalstack_django_app}}/memcached.sock',
+    }
+}
+{% elif cookiecutter.cache == "redis" -%}
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -51,6 +63,7 @@ CACHES = {
         },
     }
 }
+{% endif -%}
 
 # SECURITY
 # ------------------------------------------------------------------------------
@@ -112,11 +125,6 @@ aws_s3_domain = AWS_S3_CUSTOM_DOMAIN or f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws
 GS_BUCKET_NAME = env("DJANGO_GCP_STORAGE_BUCKET_NAME")
 GS_DEFAULT_ACL = "publicRead"
 {% endif -%}
-
-
-# OPALSTACK
-# ------------------------
-OPALSTACK_SHELL_USER = "{{cookiecutter.opalstack_shell_user}}"
 
 {% if cookiecutter.cloud_provider != 'None' or cookiecutter.use_whitenoise == 'y' -%}
 # STATIC
