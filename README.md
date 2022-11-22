@@ -1,19 +1,13 @@
-# Cookiecutter Django
+# Cookiecutter Django Opalstack
 
-[![Build Status](https://img.shields.io/github/workflow/status/cookiecutter/cookiecutter-django/CI/master)](https://github.com/cookiecutter/cookiecutter-django/actions?query=workflow%3ACI)
-[![Documentation Status](https://readthedocs.org/projects/cookiecutter-django/badge/?version=latest)](https://cookiecutter-django.readthedocs.io/en/latest/?badge=latest)
-[![Updates](https://pyup.io/repos/github/cookiecutter/cookiecutter-django/shield.svg)](https://pyup.io/repos/github/cookiecutter/cookiecutter-django/)
-[![Join our Discord](https://img.shields.io/badge/Discord-cookiecutter-5865F2?style=flat&logo=discord&logoColor=white)](https://discord.gg/uFXweDQc5a)
-[![Code Helpers Badge](https://www.codetriage.com/cookiecutter/cookiecutter-django/badges/users.svg)](https://www.codetriage.com/cookiecutter/cookiecutter-django)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+- Choose sqlite or postgres database for local development. Postgres is used for production.
+- Choose memcached cache option for opalstack <https://community.opalstack.com/d/121-setting-up-memcache>
+- Static and media files settings if not using a cloud provider or whitenoise
+- Removed Heroku options (Please use [cookiecutter-django](https://github.com/cookiecutter/cookiecutter-django) if you want to deploy to Heroku)
 
-Powered by [Cookiecutter](https://github.com/cookiecutter/cookiecutter), Cookiecutter Django is a framework for jumpstarting
-production-ready Django projects quickly.
+Opalstack Django documentation can be found here: <https://docs.opalstack.com/topic-guides/django/>
 
--   Documentation: <https://cookiecutter-django.readthedocs.io/en/latest/>
--   See [Troubleshooting](https://cookiecutter-django.readthedocs.io/en/latest/troubleshooting.html) for common errors and obstacles
--   If you have problems with Cookiecutter Django, please open [issues](https://github.com/cookiecutter/cookiecutter-django/issues/new) don't send
-    emails to the maintainers.
+Below is the readme from Cookicutter Django
 
 ## Features
 
