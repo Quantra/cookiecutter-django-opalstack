@@ -27,9 +27,13 @@ ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["{{ cookiecutter.domai
 DATABASES = {"default": env.db("DATABASE_URL")}
 {%- else %}
 DATABASES = {
-    "default": env.db("DATABASE_URL"),
+    "default": env.db(
+        "DATABASE_URL",
+        default="postgres://{% if cookiecutter.windows == 'y' %}localhost{% endif %}/{{cookiecutter.project_slug}}",
+    ),
 }
 {%- endif %}
+DATABASES["default"] = env.db("DATABASE_URL")  # noqa F405
 DATABASES["default"]["ATOMIC_REQUESTS"] = True  # noqa F405
 DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)  # noqa F405
 
@@ -109,6 +113,11 @@ GS_BUCKET_NAME = env("DJANGO_GCP_STORAGE_BUCKET_NAME")
 GS_DEFAULT_ACL = "publicRead"
 {% endif -%}
 
+
+# OPALSTACK
+# ------------------------
+OPALSTACK_SHELL_USER = "{{cookiecutter.opalstack_shell_user}}"
+
 {% if cookiecutter.cloud_provider != 'None' or cookiecutter.use_whitenoise == 'y' -%}
 # STATIC
 # ------------------------
@@ -123,6 +132,9 @@ STATIC_URL = f"https://{aws_s3_domain}/static/"
 STATICFILES_STORAGE = "{{cookiecutter.project_slug}}.utils.storages.StaticRootGoogleCloudStorage"
 COLLECTFAST_STRATEGY = "collectfast.strategies.gcloud.GoogleCloudStrategy"
 STATIC_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/static/"
+{% else -%}
+STATIC_ROOT = f"/home/{OPALSTACK_SHELL_USER}/apps/{{cookiecutter.opalstack_static_app}}"
+MEDIA_ROOT = f"/home/{OPALSTACK_SHELL_USER}/apps/{{cookiecutter.opalstack_media_app}}"
 {% endif -%}
 
 # MEDIA

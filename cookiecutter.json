@@ -5,6 +5,10 @@
   "author_name": "Daniel Roy Greenfeld",
   "domain_name": "example.com",
   "email": "{{ cookiecutter.author_name.lower()|replace(' ', '-') }}@example.com",
+  "opalstack_shell_user": "morello_apps",
+  "opalstack_django_app": "{{ cookiecutter.opalstack_shell_user.lower()[:2] }}_django",
+  "opalstack_static_app": "{{ cookiecutter.opalstack_shell_user.lower()[:2] }}_static",
+  "opalstack_media_app": "{{ cookiecutter.opalstack_shell_user.lower()[:2] }}_media",
   "version": "0.1.0",
   "open_source_license": [
     "MIT",
