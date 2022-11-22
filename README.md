@@ -31,7 +31,6 @@ production-ready Django projects quickly.
 -   Send emails via [Anymail](https://github.com/anymail/django-anymail) (using [Mailgun](http://www.mailgun.com/) by default or Amazon SES if AWS is selected cloud provider, but switchable)
 -   Media storage using Amazon S3 or Google Cloud Storage
 -   Docker support using [docker-compose](https://github.com/docker/compose) for development and production (using [Traefik](https://traefik.io/) with [LetsEncrypt](https://letsencrypt.org/) support)
--   [Procfile](https://devcenter.heroku.com/articles/procfile) for deploying to Heroku
 -   Instructions for deploying to [PythonAnywhere](https://www.pythonanywhere.com/)
 -   Run tests with unittest or pytest
 -   Customizable PostgreSQL version
@@ -154,7 +153,6 @@ Answer the prompts with your own desired [options](http://cookiecutter-django.re
     use_mailhog [n]: n
     use_sentry [n]: y
     use_whitenoise [n]: n
-    use_heroku [n]: y
     Select ci_tool:
     1 - None
     2 - Travis

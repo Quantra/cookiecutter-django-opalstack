@@ -108,10 +108,6 @@ use_sentry:
 use_whitenoise:
     Indicates whether the project should be configured to use WhiteNoise_.
 
-use_heroku:
-    Indicates whether the project should be configured so as to be deployable
-    to Heroku_.
-
 ci_tool:
     Select a CI tool for running tests. The choices are:
 
@@ -124,7 +120,7 @@ keep_local_envs_in_vcs:
     Indicates whether the project's ``.envs/.local/`` should be kept in VCS
     (comes in handy when working in teams where local environment reproducibility
     is strongly encouraged).
-    Note: .env(s) are only utilized when Docker Compose and/or Heroku support is enabled.
+    Note: .env(s) are only utilized when Docker Compose support is enabled.
 
 debug:
     Indicates whether the project should be configured for debugging.
@@ -169,8 +165,6 @@ debug:
 .. _Sentry: https://github.com/getsentry/sentry
 
 .. _WhiteNoise: https://github.com/evansd/whitenoise
-
-.. _Heroku: https://github.com/heroku/heroku-buildpack-python
 
 .. _Travis CI: https://travis-ci.org/
 

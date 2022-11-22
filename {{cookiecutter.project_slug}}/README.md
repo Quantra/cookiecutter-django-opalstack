@@ -114,13 +114,11 @@ You must set the DSN url in production.
 ## Deployment
 
 The following details how to deploy this application.
-{%- if cookiecutter.use_heroku.lower() == "y" %}
 
-### Heroku
+### Opalstack
 
-See detailed [cookiecutter-django Heroku documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-on-heroku.html).
+See detailed [Opalstack Django documentation](https://docs.opalstack.com/topic-guides/django/)
 
-{%- endif %}
 {%- if cookiecutter.use_docker.lower() == "y" %}
 
 ### Docker

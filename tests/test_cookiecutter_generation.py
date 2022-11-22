@@ -98,8 +98,6 @@ SUPPORTED_COMBINATIONS = [
     {"use_sentry": "n"},
     {"use_whitenoise": "y"},
     {"use_whitenoise": "n"},
-    {"use_heroku": "y"},
-    {"use_heroku": "n"},
     {"ci_tool": "None"},
     {"ci_tool": "Travis"},
     {"ci_tool": "Gitlab"},

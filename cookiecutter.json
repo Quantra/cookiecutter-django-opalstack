@@ -63,7 +63,6 @@
   "use_mailhog": "n",
   "use_sentry": "n",
   "use_whitenoise": "n",
-  "use_heroku": "n",
   "ci_tool": [
     "None",
     "Travis",
