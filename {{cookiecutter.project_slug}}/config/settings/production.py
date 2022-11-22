@@ -45,9 +45,9 @@ OPALSTACK_SHELL_USER = "{{cookiecutter.opalstack_shell_user}}"
 # ------------------------------------------------------------------------------
 {% if cookiecutter.cache == "memcached" -%}
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-        'LOCATION': f'unix:/home/{OPALSTACK_SHELL_USER}/apps/{{cookiecutter.opalstack_django_app}}/memcached.sock',
+    "default": {
+        "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
+        "LOCATION": f"unix:/home/{OPALSTACK_SHELL_USER}/apps/{{cookiecutter.opalstack_django_app}}/memcached.sock",
     }
 }
 {% elif cookiecutter.cache == "redis" -%}

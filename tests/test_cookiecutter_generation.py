@@ -32,6 +32,10 @@ def context():
         "domain_name": "example.com",
         "version": "0.1.0",
         "timezone": "UTC",
+        "opalstack_shell_user": "test_opalstack_user",
+        "opalstack_django_app": "te_django",
+        "opalstack_static_app": "te_static",
+        "opalstack_media_app": "te_media",
     }
 
 
@@ -47,6 +51,8 @@ SUPPORTED_COMBINATIONS = [
     {"use_pycharm": "n"},
     {"use_docker": "y"},
     {"use_docker": "n"},
+    {"local_db": "sqlite"},
+    {"local_db": "postgres"},
     {"postgresql_version": "14"},
     {"postgresql_version": "13"},
     {"postgresql_version": "12"},
@@ -64,7 +70,7 @@ SUPPORTED_COMBINATIONS = [
     {"cloud_provider": "None", "use_whitenoise": "y", "mail_service": "SendinBlue"},
     {"cloud_provider": "None", "use_whitenoise": "y", "mail_service": "SparkPost"},
     {"cloud_provider": "None", "use_whitenoise": "y", "mail_service": "Other SMTP"},
-    # Note: cloud_provider=None AND use_whitenoise=n is not supported
+    {"cloud_provider": "None", "use_whitenoise": "n"},
     {"cloud_provider": "AWS", "mail_service": "Mailgun"},
     {"cloud_provider": "AWS", "mail_service": "Amazon SES"},
     {"cloud_provider": "AWS", "mail_service": "Mailjet"},
@@ -83,6 +89,8 @@ SUPPORTED_COMBINATIONS = [
     {"cloud_provider": "GCP", "mail_service": "SparkPost"},
     {"cloud_provider": "GCP", "mail_service": "Other SMTP"},
     # Note: cloud_providers GCP and None with mail_service Amazon SES is not supported
+    {"cache": "memcached"},
+    {"cache": "redis"},
     {"use_async": "y"},
     {"use_async": "n"},
     {"use_drf": "y"},
@@ -109,7 +117,6 @@ SUPPORTED_COMBINATIONS = [
 ]
 
 UNSUPPORTED_COMBINATIONS = [
-    {"cloud_provider": "None", "use_whitenoise": "n"},
     {"cloud_provider": "GCP", "mail_service": "Amazon SES"},
     {"cloud_provider": "None", "mail_service": "Amazon SES"},
 ]
