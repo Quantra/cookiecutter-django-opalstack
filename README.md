@@ -5,6 +5,7 @@
 - Static and media files settings if not using a cloud provider or whitenoise
 - Removed Heroku options (Please use [cookiecutter-django](https://github.com/cookiecutter/cookiecutter-django) if you want to deploy to Heroku)
 - Environment variables set to read from a .env file by default and a helper script added to create this in utility/setup_opalstack.py
+- Logging configuration writes to log file in your Opalstack logs directory.
 
 Opalstack Django documentation can be found here: <https://docs.opalstack.com/topic-guides/django/>
 
@@ -48,7 +49,7 @@ Once you have provided a value for all environment variables the script will:
 - Configure `uwsgi.ini`
 - Create cronjob to run and persist memcached if memcached is the default cache.
 - Restart wsgi server.
-- Optionally configure database backups.
+- Optionally configure daily database backups.
 
 If the script runs successfully and your settings are configured correctly you should be good to go =]
 

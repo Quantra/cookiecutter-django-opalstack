@@ -354,9 +354,17 @@ LOGGING = {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "verbose",
-        }
+        },
+        "file": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": Path(f"/home/{OPALSTACK_SHELL_USER}/logs/apps/{OPALSTACK_DJANGO_APP}/django.log"),
+            "formatter": "verbose",
+            "backupCount": 10,
+            "maxBytes": 5 * 1024 * 1024,
+        },
     },
-    "root": {"level": "INFO", "handlers": ["console"]},
+    "root": {"level": "INFO", "handlers": ["file", "console"]},
     "loggers": {
         "django.db.backends": {
             "level": "ERROR",
