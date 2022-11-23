@@ -2,6 +2,7 @@
 
 - Choose sqlite or postgres database for local development. Postgres is used for production.
 - Choose memcached cache option for opalstack <https://community.opalstack.com/d/121-setting-up-memcache>
+- - Redis option available but configuration is up to you.
 - Static and media files settings if not using a cloud provider or whitenoise
 - Removed Heroku options (Please use [cookiecutter-django](https://github.com/cookiecutter/cookiecutter-django) if you want to deploy to Heroku)
 - Environment variables set to read from a .env file by default and a helper script added to create this in utility/setup_opalstack.py
