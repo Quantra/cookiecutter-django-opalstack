@@ -40,6 +40,9 @@ DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)  # no
 # OPALSTACK
 # ------------------------
 OPALSTACK_SHELL_USER = "{{cookiecutter.opalstack_shell_user}}"
+OPALSTACK_DJANGO_APP = "{{cookiecutter.opalstack_django_app}}"
+OPALSTACK_STATIC_APP = "{{cookiecutter.opalstack_static_app}}"
+OPALSTACK_MEDIA_APP = "{{cookiecutter.opalstack_media_app}}"
 
 # CACHES
 # ------------------------------------------------------------------------------
@@ -47,7 +50,7 @@ OPALSTACK_SHELL_USER = "{{cookiecutter.opalstack_shell_user}}"
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
-        "LOCATION": f"unix:/home/{OPALSTACK_SHELL_USER}/apps/{{cookiecutter.opalstack_django_app}}/memcached.sock",
+        "LOCATION": f"unix:/home/{OPALSTACK_SHELL_USER}/apps/{OPALSTACK_DJANGO_APP}/memcached.sock",
     }
 }
 {% elif cookiecutter.cache == "redis" -%}
@@ -126,10 +129,8 @@ GS_BUCKET_NAME = env("DJANGO_GCP_STORAGE_BUCKET_NAME")
 GS_DEFAULT_ACL = "publicRead"
 {% endif -%}
 
-{% if cookiecutter.cloud_provider != 'None' or cookiecutter.use_whitenoise == 'y' -%}
 # STATIC
 # ------------------------
-{% endif -%}
 {% if cookiecutter.use_whitenoise == 'y' -%}
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 {% elif cookiecutter.cloud_provider == 'AWS' -%}
@@ -141,7 +142,7 @@ STATICFILES_STORAGE = "{{cookiecutter.project_slug}}.utils.storages.StaticRootGo
 COLLECTFAST_STRATEGY = "collectfast.strategies.gcloud.GoogleCloudStrategy"
 STATIC_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/static/"
 {% else -%}
-STATIC_ROOT = f"/home/{OPALSTACK_SHELL_USER}/apps/{{cookiecutter.opalstack_static_app}}"
+STATIC_ROOT = f"/home/{OPALSTACK_SHELL_USER}/apps/{OPALSTACK_STATIC_APP}"
 {% endif -%}
 
 # MEDIA
@@ -153,7 +154,7 @@ MEDIA_URL = f"https://{aws_s3_domain}/media/"
 DEFAULT_FILE_STORAGE = "{{cookiecutter.project_slug}}.utils.storages.MediaRootGoogleCloudStorage"
 MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/media/"
 {%- else %}
-MEDIA_ROOT = f"/home/{OPALSTACK_SHELL_USER}/apps/{{cookiecutter.opalstack_media_app}}"
+MEDIA_ROOT = f"/home/{OPALSTACK_SHELL_USER}/apps/{OPALSTACK_MEDIA_APP}"
 {%- endif %}
 
 # EMAIL
@@ -293,7 +294,11 @@ INSTALLED_APPS = ["collectfast"] + INSTALLED_APPS  # noqa F405
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
+    "filters": {
+        "require_debug_false": {
+            "()": "django.utils.log.RequireDebugFalse",
+        },
+    },
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
@@ -301,6 +306,14 @@ LOGGING = {
         }
     },
     "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": Path(f"/home/{OPALSTACK_SHELL_USER}/logs/apps/{OPALSTACK_DJANGO_APP}/django.log"),
+            "formatter": "verbose",
+            "backupCount": 10,
+            "maxBytes": 5 * 1024 * 1024,
+        },
         "mail_admins": {
             "level": "ERROR",
             "filters": ["require_debug_false"],
