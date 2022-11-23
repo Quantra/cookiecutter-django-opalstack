@@ -4,10 +4,55 @@
 - Choose memcached cache option for opalstack <https://community.opalstack.com/d/121-setting-up-memcache>
 - Static and media files settings if not using a cloud provider or whitenoise
 - Removed Heroku options (Please use [cookiecutter-django](https://github.com/cookiecutter/cookiecutter-django) if you want to deploy to Heroku)
+- Environment variables set to read from a .env file by default and a helper script added to create this in utility/setup_opalstack.py
 
 Opalstack Django documentation can be found here: <https://docs.opalstack.com/topic-guides/django/>
 
-Below is the readme from Cookicutter Django
+## Opalstack setup script
+
+This is a very brief guide on getting set up on Opalstack. It assumes familiarity with the Opalstack platform and docs.
+
+Log into your Opalstack account
+- Create a shell user
+- Create a django app e.g. `mydjangoapp`
+- Create a Nginx static only app for static files e.g. `my_static`
+- Create a Nginx static only app for media files e.g. `my_media`
+- Create a postgres database user e.g. `mydbuser`
+- Create postgres database e.g. `mydb`
+- Create a domain matching the domain you used to generate the project.
+- Create a site and route this domain.
+- - Secure the domain with SSL.
+- - Connect `mydjangoapp` at `/`
+- - Connect `my_static` at `/static`
+- - Connect `my_media` at `/media`
+
+SSH into your opalstack account using the shell user you just created and run the following to activate your virtualenv.  Update the path to match the django app you created.
+
+    cd ~/apps/mydjangoapp
+    source env/bin/activate
+
+Now replace the generated project with the project you created using cookiecutter-django-opalstack and `cd` into that directory. You could use git to pull down a repository or FTP the files into place for example.
+
+Run the setup script with `python3 utility/setup_opalstack.py`
+
+The script will install requirements.from `requirements/production.txt`
+
+The script will ask you to input values for all environment variables before saving them to a `.env` file.
+
+When asked for `DATABASE_URL` you should provide it in the following format `postgresql://mydbuser:mydbpassword@localhost:5432/mydb`
+
+Once you have provided a value for all environment variables the script will:
+
+- Migrate the database.
+- Collect static files.
+- Configure `uwsgi.ini`
+- Create cronjob to run and persist memcached if memcached is the default cache.
+- Restart wsgi server.
+- Optionally configure database backups.
+
+If the script runs successfully and your settings are configured correctly you should be good to go =]
+
+*Below is the readme from Cookiecutter Django*
 
 ## Features
 
