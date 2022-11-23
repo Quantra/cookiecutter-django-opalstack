@@ -10,6 +10,7 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
 
 {% endif -%}
+from pathlib import Path
 from .base import *  # noqa
 from .base import env
 
@@ -309,7 +310,9 @@ LOGGING = {
         "file": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": Path(f"/home/{OPALSTACK_SHELL_USER}/logs/apps/{OPALSTACK_DJANGO_APP}/django.log"),
+            "filename": Path(
+                f"/home/{OPALSTACK_SHELL_USER}/logs/apps/{OPALSTACK_DJANGO_APP}/django.log"
+            ),
             "formatter": "verbose",
             "backupCount": 10,
             "maxBytes": 5 * 1024 * 1024,
@@ -325,7 +328,7 @@ LOGGING = {
             "formatter": "verbose",
         },
     },
-    "root": {"level": "INFO", "handlers": ["console"]},
+    "root": {"level": "INFO", "handlers": ["file", "console"]},
     "loggers": {
         "django.request": {
             "handlers": ["mail_admins"],
@@ -358,7 +361,9 @@ LOGGING = {
         "file": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": Path(f"/home/{OPALSTACK_SHELL_USER}/logs/apps/{OPALSTACK_DJANGO_APP}/django.log"),
+            "filename": Path(
+                f"/home/{OPALSTACK_SHELL_USER}/logs/apps/{OPALSTACK_DJANGO_APP}/django.log"
+            ),
             "formatter": "verbose",
             "backupCount": 10,
             "maxBytes": 5 * 1024 * 1024,
