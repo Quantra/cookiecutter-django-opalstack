@@ -152,7 +152,7 @@ MEDIA_URL = f"https://{aws_s3_domain}/media/"
 {%- elif cookiecutter.cloud_provider == 'GCP' %}
 DEFAULT_FILE_STORAGE = "{{cookiecutter.project_slug}}.utils.storages.MediaRootGoogleCloudStorage"
 MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/media/"
-{% else -%}
+{%- else %}
 MEDIA_ROOT = f"/home/{OPALSTACK_SHELL_USER}/apps/{{cookiecutter.opalstack_media_app}}"
 {%- endif %}
 
@@ -275,7 +275,7 @@ COMPRESS_FILTERS = {
     "js": ["compressor.filters.jsmin.JSMinFilter"],
 }
 {% endif %}
-{%- if cookiecutter.use_whitenoise == 'n' -%}
+{%- if cookiecutter.use_whitenoise == 'n' and cookiecutter.cloud_provider != 'None' -%}
 # Collectfast
 # ------------------------------------------------------------------------------
 # https://github.com/antonagestam/collectfast#installation

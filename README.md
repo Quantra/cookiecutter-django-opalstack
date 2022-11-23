@@ -22,16 +22,16 @@ Log into your Opalstack account
 - Create a domain matching the domain you used to generate the project.
 - Create a site and route this domain.
 - - Secure the domain with SSL.
-- - Connect `mydjangoapp` at `/`
-- - Connect `my_static` at `/static`
-- - Connect `my_media` at `/media`
+- - Route `mydjangoapp` at `/`
+- - Route `my_static` at `/static`
+- - Route `my_media` at `/media`
 
 SSH into your opalstack account using the shell user you just created and run the following to activate your virtualenv.  Update the path to match the django app you created.
 
     cd ~/apps/mydjangoapp
     source env/bin/activate
 
-Now replace the generated project with the project you created using cookiecutter-django-opalstack and `cd` into that directory. You could use git to pull down a repository or FTP the files into place for example.
+Now replace the generated project with the project you created using cookiecutter-django-opalstack and `cd` into that directory. You could use git to pull down a repository or use FTP to put the files into place for example.
 
 Run the setup script with `python3 utility/setup_opalstack.py`
 
