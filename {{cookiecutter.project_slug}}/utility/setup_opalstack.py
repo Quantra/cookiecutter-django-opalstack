@@ -53,6 +53,11 @@ class OpalstackHelper:
         # create dotenv
         self.create_dotenv()
 
+        # set django settings environment variable in .bash_profile
+        self.logger.info("Adding django settings environment variable to ~/.bash_profile")
+        self.set_bash_env_var()
+        self.logger.info("Django settings environment variable added to ~/.bash_profile!")
+
         # migrate db
         self.logger.info("Migrating database...")
         self.try_command("migrate")
@@ -135,6 +140,22 @@ class OpalstackHelper:
 
         self.logger.info(".env file created!")
 
+    def set_bash_env_var(self):
+        """
+        Set an environment variable in .bash_profile so when the user logs in via SSH manage.py commands use
+        production settings.
+        """
+        env_var = "DJANGO_SETTINGS_MODULE=\"config.settings.production\"; export DJANGO_SETTINGS_MODULE"
+
+        bash_path = Path.home() / ".bash_profile"
+        bash_profile = bash_path.read_text()
+
+        if env_var in bash_profile:
+            return
+
+        bash_profile += f"\n{env_var}"
+        bash_path.write_text(bash_profile)
+
     def configure_uwsgi(self):
         """
         Rewrite the ../uwsgi.ini file with correct paths for this project.
@@ -143,12 +164,12 @@ class OpalstackHelper:
         self.logger.info("Configuring uwsgi.ini...")
 
         uwsgi_path = self.parent_path / "uwsgi.ini"
-        text = uwsgi_path.read_text()
-        text = text.replace(
+        uwsgi_ini = uwsgi_path.read_text()
+        uwsgi_ini = uwsgi_ini.replace(
             "/myproject/myproject/wsgi.py", f"/{self.root_path.name}/config/wsgi.py"
         )
-        text = text.replace("/myproject", f"/{self.root_path.name}")
-        uwsgi_path.write_text(text)
+        uwsgi_ini = uwsgi_ini.replace("/myproject", f"/{self.root_path.name}")
+        uwsgi_path.write_text(uwsgi_ini)
 
         self.logger.info("uwsgi.ini configured!")
 
