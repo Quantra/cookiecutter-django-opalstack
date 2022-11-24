@@ -1,6 +1,9 @@
 {% if cookiecutter.use_sentry == 'y' -%}
 import logging
+{% endif -%}
+from pathlib import Path
 
+{% if cookiecutter.use_sentry == 'y' -%}
 import sentry_sdk
 {%- if cookiecutter.use_celery == 'y' %}
 from sentry_sdk.integrations.celery import CeleryIntegration
@@ -10,7 +13,6 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
 
 {% endif -%}
-from pathlib import Path
 from .base import *  # noqa
 from .base import env
 

@@ -6,7 +6,6 @@ import os
 import re
 import subprocess
 import sys
-from importlib import reload
 from pathlib import Path
 from random import randint
 from tempfile import NamedTemporaryFile
@@ -87,7 +86,14 @@ class OpalstackHelper:
         """
         self.logger.info("Installing requirements from requirements/production.txt...")
         subprocess.run(
-            [sys.executable, "-m", "pip", "install", "-r", f"{self.root_path / 'requirements' / 'production.txt'}"]
+            [
+                sys.executable,
+                "-m",
+                "pip",
+                "install",
+                "-r",
+                f"{self.root_path / 'requirements' / 'production.txt'}",
+            ]
         )
         self.logger.info("Requirements installed!")
 
@@ -105,12 +111,15 @@ class OpalstackHelper:
         while True:
             try:
                 self.django.setup()
-                self.logger.info("All environment variables have been specified. Well done!")
+                self.logger.info(
+                    "All environment variables have been specified. Well done!"
+                )
                 break
             except self.ImproperlyConfigured as e:
                 # regex the error message and set the env variable via raw input
                 regex = re.match(r"^Set the ([A-Z_]+) environment variable$", str(e))
-                if not re.match: raise e
+                if not re.match:
+                    raise e
 
                 env_var = regex.group(1)
                 env_val = input(f"Enter the value for {env_var}: ")
@@ -120,7 +129,7 @@ class OpalstackHelper:
                 os.environ.setdefault(env_var, env_val)
 
         # append the new env variable to the .env file
-        self.logger.info(f"Writing environment variables to .env file.")
+        self.logger.info("Writing environment variables to .env file.")
         with dotenv_path.open("a") as env_file:
             env_file.write(file_contents)
 
@@ -135,7 +144,9 @@ class OpalstackHelper:
 
         uwsgi_path = self.parent_path / "uwsgi.ini"
         text = uwsgi_path.read_text()
-        text = text.replace("/myproject/myproject/wsgi.py", f"/{self.root_path.name}/config/wsgi.py")
+        text = text.replace(
+            "/myproject/myproject/wsgi.py", f"/{self.root_path.name}/config/wsgi.py"
+        )
         text = text.replace("/myproject", f"/{self.root_path.name}")
         uwsgi_path.write_text(text)
 
@@ -148,9 +159,11 @@ class OpalstackHelper:
         """
         self.logger.info("Configuring memcached...")
 
-        cronjob = ("* * * * * /usr/bin/pgrep -f \"memcached -d -s $HOME/apps/{parent_path}/memcached.sock\" > "
-                   "/dev/null || memcached -d -s $HOME/apps/{parent_path}/memcached.sock -P "
-                   "$HOME/apps/{parent_path}/memcached.pid -M 100\n").format(parent_path=self.parent_path.name)
+        cronjob = (
+            '* * * * * /usr/bin/pgrep -f "memcached -d -s $HOME/apps/{parent_path}/memcached.sock" > '
+            "/dev/null || memcached -d -s $HOME/apps/{parent_path}/memcached.sock -P "
+            "$HOME/apps/{parent_path}/memcached.pid -M 100\n"
+        ).format(parent_path=self.parent_path.name)
 
         self.add_cronjob(cronjob)
 
@@ -166,7 +179,9 @@ class OpalstackHelper:
             self.call_command(command)
             return True
         except Exception as e:
-            self.logger.warning(f"The following exception occurred when trying to run manage.py {command}:\n{e}")
+            self.logger.warning(
+                f"The following exception occurred when trying to run manage.py {command}:\n{e}"
+            )
             return False
 
     def restart_wsgi(self):
@@ -213,7 +228,9 @@ class OpalstackHelper:
 
         # Write the pgpass and backup script files
         pgpass_path.write_text(f"localhost:5432:{db_name}:{db_user}:{db_password}")
-        script_path.write_text(self.db_backup_script.format(db_name=db_name, db_user=db_user))
+        script_path.write_text(
+            self.db_backup_script.format(db_name=db_name, db_user=db_user)
+        )
 
         # Backup the database
         backup_cmd = f"$HOME/.local/bin/backup_{db_name}"
@@ -237,6 +254,9 @@ class OpalstackHelper:
             path.chmod(mode)
 
     def make_files(self, files, mode=0o700):
+        """
+        Make all files in files list and chmod them to the desired value.
+        """
         for file in files:
             file.touch(mode=mode, exist_ok=True)
             file.chmod(mode)
@@ -247,10 +267,13 @@ class OpalstackHelper:
         :param cronjob:
         :return:
         """
-        crontab = subprocess.run(["crontab", "-l"], capture_output=True, text=True).stdout
+        crontab = subprocess.run(
+            ["crontab", "-l"], capture_output=True, text=True
+        ).stdout
 
         # Prevent duplicate commands in crontab
-        if cronjob[15:] in crontab: return
+        if cronjob[15:] in crontab:
+            return
 
         crontab += cronjob
 
@@ -267,14 +290,16 @@ class OpalstackHelper:
         https://docs.opalstack.com/user-guide/postgresql-databases/#scheduled-backups-for-postgresql-databases
         :return:
         """
-        return ("#!/bin/bash\n"
-                "\n"
-                "export DBNAME={db_name}\n"
-                "export DBUSER={db_user}\n"
-                "\n"
-                "/bin/pg_dump -b -Fp -U $DBUSER $DBNAME \\\n"
-                "> $HOME/backups/psql/$DBNAME-$(date +\%Y\%m\%d\%H\%M).sql \\\n"
-                "2>> $HOME/backups/psql/$DBNAME.log")
+        return (
+            "#!/bin/bash\n"
+            "\n"
+            "export DBNAME={db_name}\n"
+            "export DBUSER={db_user}\n"
+            "\n"
+            "/bin/pg_dump -b -Fp -U $DBUSER $DBNAME \\\n"
+            "> $HOME/backups/psql/$DBNAME-$(date +\%Y\%m\%d\%H\%M).sql \\\n"  # noqa
+            "2>> $HOME/backups/psql/$DBNAME.log"
+        )
 
 
 if __name__ == "__main__":
