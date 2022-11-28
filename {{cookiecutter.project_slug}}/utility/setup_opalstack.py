@@ -63,6 +63,11 @@ class OpalstackHelper:
         migrated = self.try_command("migrate")
         self.logger.info("Database migrated!")
 
+        # collectstatic
+        self.logger.info("Collecting static files...")
+        self.try_command("collectstatic")
+        self.logger.info("Static files collected!")
+
         # set sites initial
         if migrated:
             self.set_sites_initial()
