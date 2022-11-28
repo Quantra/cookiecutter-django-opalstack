@@ -78,6 +78,6 @@ RUN chmod +x /start-flower
 # copy application code to WORKDIR
 COPY . ${APP_HOME}
 
-{%- if cookiecutter.local_db == 'postgres'}
+{%- if cookiecutter.local_db == 'postgres' %}
 ENTRYPOINT ["/entrypoint"]
 {%- endif %}
