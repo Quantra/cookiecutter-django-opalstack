@@ -5,7 +5,7 @@
 - - Redis option available but configuration is up to you.
 - Static and media files settings if not using a cloud provider or whitenoise
 - Removed Heroku options (Please use [cookiecutter-django](https://github.com/cookiecutter/cookiecutter-django) if you want to deploy to Heroku)
-- Environment variables set to read from a .env file by default and a helper script added to create this in utility/setup_opalstack.py
+- Environment variables set to read from a .env file by default and a helper script added to create this in opalstack/setup.py
 - Logging configuration writes to log file in your Opalstack logs directory.
 
 Opalstack Django documentation can be found here: <https://docs.opalstack.com/topic-guides/django/>
@@ -35,7 +35,7 @@ SSH into your opalstack account using the shell user you just created and run th
 
 Now replace the generated project with the project you created using cookiecutter-django-opalstack and `cd` into that directory. You could use git to pull down a repository or use FTP to put the files into place for example.
 
-Run the setup script with `python3 utility/setup_opalstack.py`
+Run the setup script with `python3 opalstack/setup.py`
 
 The script will install requirements.from `requirements/production.txt`
 
