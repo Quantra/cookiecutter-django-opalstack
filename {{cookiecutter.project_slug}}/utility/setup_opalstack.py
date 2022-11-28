@@ -63,14 +63,14 @@ class OpalstackHelper:
         migrated = self.try_command("migrate")
         self.logger.info("Database migrated!")
 
+        # set sites initial
+        if migrated:
+            self.set_sites_initial()
+
         # collectstatic
         self.logger.info("Collecting static files...")
         self.try_command("collectstatic")
         self.logger.info("Static files collected!")
-
-        # set sites initial
-        if migrated:
-            self.set_sites_initial()
 
         # configure the uwsgi.ini file
         self.configure_uwsgi()
@@ -209,6 +209,13 @@ class OpalstackHelper:
             )
             return False
 
+    def set_sites_initial(self):
+        self.logger.info("Setting sites initial...")
+        from django.contrib.sites.models import Site
+
+        Site.objects.all().update(domain=self.settings.ALLOWED_HOSTS[0], name=self.settings.ALLOWED_HOSTS[0])
+        self.logger.info("Sites initial set!")
+
     def restart_wsgi(self):
         """
         Restart the WSGI server.
@@ -262,7 +269,7 @@ class OpalstackHelper:
         subprocess.run([backup_cmd.replace("$HOME", str(home_path))])
 
         # Add a cronjob for a random minute and hour between 0 and 5
-        cronjob = f"{randint(0, 59)} {randint(0, 5)} * * * {backup_cmd}\n"
+        cronjob = f"{self.random_cron_daily} {backup_cmd}\n"
         self.add_cronjob(cronjob)
 
         self.logger.info("Daily database backups configured!")
@@ -285,6 +292,14 @@ class OpalstackHelper:
         for file in files:
             file.touch(mode=mode, exist_ok=True)
             file.chmod(mode)
+
+    @property
+    def random_cron_daily(self):
+        """
+        Random hour and minute for daily cronjobs.  Hour is between 0 & 5
+        :return:
+        """
+        return f"{randint(0, 59)} {randint(0, 5)} * * *"
 
     def add_cronjob(self, cronjob):
         """
