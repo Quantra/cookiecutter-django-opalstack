@@ -1,8 +1,10 @@
 version: '3'
 
+{%- if cookiecutter.local_db == 'postgres' %}
 volumes:
   {{ cookiecutter.project_slug }}_local_postgres_data: {}
   {{ cookiecutter.project_slug }}_local_postgres_data_backups: {}
+{%- endif %}
 
 services:
   django:{% if cookiecutter.use_celery == 'y' %} &django{% endif %}
