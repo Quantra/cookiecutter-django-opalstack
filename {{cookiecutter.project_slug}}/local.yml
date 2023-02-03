@@ -40,8 +40,8 @@ services:
     image: {{ cookiecutter.project_slug }}_production_postgres
     container_name: {{ cookiecutter.project_slug }}_local_postgres
     volumes:
-      - {{ cookiecutter.project_slug }}_local_postgres_data:/var/lib/postgresql/data:Z
-      - {{ cookiecutter.project_slug }}_local_postgres_data_backups:/backups:z
+      - {{ cookiecutter.project_slug }}_local_postgres_data:/var/lib/postgresql/data
+      - {{ cookiecutter.project_slug }}_local_postgres_data_backups:/backups
     env_file:
       - ./.envs/.local/.postgres
   {%- endif %}
@@ -111,7 +111,7 @@ services:
     command: /start-flower
 
   {%- endif %}
-  {%- if cookiecutter.frontend_pipeline == 'Gulp' %}
+  {%- if cookiecutter.frontend_pipeline in ['Gulp', 'Webpack'] %}
 
   node:
     build:
@@ -128,7 +128,9 @@ services:
     command: npm run dev
     ports:
       - "3000:3000"
+      {%- if cookiecutter.frontend_pipeline == 'Gulp' %}
       # Expose browsersync UI: https://www.browsersync.io/docs/options/#option-ui
       - "3001:3001"
+      {%- endif %}
 
   {%- endif %}

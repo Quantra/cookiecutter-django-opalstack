@@ -62,6 +62,8 @@ SUPPORTED_COMBINATIONS = [
     {"cloud_provider": "AWS", "use_whitenoise": "n"},
     {"cloud_provider": "GCP", "use_whitenoise": "y"},
     {"cloud_provider": "GCP", "use_whitenoise": "n"},
+    {"cloud_provider": "Azure", "use_whitenoise": "y"},
+    {"cloud_provider": "Azure", "use_whitenoise": "n"},
     {"cloud_provider": "None", "use_whitenoise": "y", "mail_service": "Mailgun"},
     {"cloud_provider": "None", "use_whitenoise": "y", "mail_service": "Mailjet"},
     {"cloud_provider": "None", "use_whitenoise": "y", "mail_service": "Mandrill"},
@@ -88,7 +90,16 @@ SUPPORTED_COMBINATIONS = [
     {"cloud_provider": "GCP", "mail_service": "SendinBlue"},
     {"cloud_provider": "GCP", "mail_service": "SparkPost"},
     {"cloud_provider": "GCP", "mail_service": "Other SMTP"},
-    # Note: cloud_providers GCP and None with mail_service Amazon SES is not supported
+    {"cloud_provider": "Azure", "mail_service": "Mailgun"},
+    {"cloud_provider": "Azure", "mail_service": "Mailjet"},
+    {"cloud_provider": "Azure", "mail_service": "Mandrill"},
+    {"cloud_provider": "Azure", "mail_service": "Postmark"},
+    {"cloud_provider": "Azure", "mail_service": "Sendgrid"},
+    {"cloud_provider": "Azure", "mail_service": "SendinBlue"},
+    {"cloud_provider": "Azure", "mail_service": "SparkPost"},
+    {"cloud_provider": "Azure", "mail_service": "Other SMTP"},
+    # Note: cloud_providers GCP, Azure, and None
+    # with mail_service Amazon SES is not supported
     {"cache": "memcached"},
     {"cache": "redis"},
     {"use_async": "y"},
@@ -98,6 +109,7 @@ SUPPORTED_COMBINATIONS = [
     {"frontend_pipeline": "None"},
     {"frontend_pipeline": "Django Compressor"},
     {"frontend_pipeline": "Gulp"},
+    {"frontend_pipeline": "Webpack"},
     {"use_celery": "y"},
     {"use_celery": "n"},
     {"use_mailhog": "y"},
@@ -118,6 +130,7 @@ SUPPORTED_COMBINATIONS = [
 
 UNSUPPORTED_COMBINATIONS = [
     {"cloud_provider": "GCP", "mail_service": "Amazon SES"},
+    {"cloud_provider": "Azure", "mail_service": "Amazon SES"},
     {"cloud_provider": "None", "mail_service": "Amazon SES"},
 ]
 
@@ -127,11 +140,11 @@ def _fixture_id(ctx):
     return "-".join(f"{key}:{value}" for key, value in ctx.items())
 
 
-def build_files_list(root_dir):
+def build_files_list(base_dir):
     """Build a list containing absolute paths to the generated files."""
     return [
         os.path.join(dirpath, file_path)
-        for dirpath, subdirs, files in os.walk(root_dir)
+        for dirpath, subdirs, files in os.walk(base_dir)
         for file_path in files
     ]
 

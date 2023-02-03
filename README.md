@@ -68,9 +68,9 @@ If the script runs successfully and your settings are configured correctly you s
 -   Registration via [django-allauth](https://github.com/pennersr/django-allauth)
 -   Comes with custom user model ready to go
 -   Optional basic ASGI setup for Websockets
--   Optional custom static build using Gulp and livereload
+-   Optional custom static build using Gulp or Webpack
 -   Send emails via [Anymail](https://github.com/anymail/django-anymail) (using [Mailgun](http://www.mailgun.com/) by default or Amazon SES if AWS is selected cloud provider, but switchable)
--   Media storage using Amazon S3 or Google Cloud Storage
+-   Media storage using Amazon S3, Google Cloud Storage or Azure Storage
 -   Docker support using [docker-compose](https://github.com/docker/compose) for development and production (using [Traefik](https://traefik.io/) with [LetsEncrypt](https://letsencrypt.org/) support)
 -   Instructions for deploying to [PythonAnywhere](https://www.pythonanywhere.com/)
 -   Run tests with unittest or pytest
@@ -81,7 +81,7 @@ If the script runs successfully and your settings are configured correctly you s
 
 *These features can be enabled during initial project setup.*
 
--   Serve static files from Amazon S3, Google Cloud Storage or [Whitenoise](https://whitenoise.readthedocs.io/)
+-   Serve static files from Amazon S3, Google Cloud Storage, Azure Storage or [Whitenoise](https://whitenoise.readthedocs.io/)
 -   Configuration for [Celery](https://docs.celeryq.dev) and [Flower](https://github.com/mher/flower) (the latter in Docker setup only)
 -   Integration with [MailHog](https://github.com/mailhog/MailHog) for local email testing
 -   Integration with [Sentry](https://sentry.io/welcome/) for error logging
@@ -189,6 +189,7 @@ Answer the prompts with your own desired [options](http://cookiecutter-django.re
     1 - None
     2 - Django Compressor
     3 - Gulp
+    4 - Webpack
     Choose from 1, 2, 3, 4 [1]: 1
     use_celery [n]: y
     use_mailhog [n]: n

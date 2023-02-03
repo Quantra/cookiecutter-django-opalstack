@@ -10,6 +10,7 @@ class StaticRootS3Boto3Storage(S3Boto3Storage):
 class MediaRootS3Boto3Storage(S3Boto3Storage):
     location = "media"
     file_overwrite = False
+
 {%- elif cookiecutter.cloud_provider == 'GCP' -%}
 from storages.backends.gcloud import GoogleCloudStorage
 
@@ -20,6 +21,18 @@ class StaticRootGoogleCloudStorage(GoogleCloudStorage):
 
 
 class MediaRootGoogleCloudStorage(GoogleCloudStorage):
+    location = "media"
+    file_overwrite = False
+
+{%- elif cookiecutter.cloud_provider == 'Azure' -%}
+from storages.backends.azure_storage import AzureStorage
+
+
+class StaticRootAzureStorage(AzureStorage):
+    location = "static"
+
+
+class MediaRootAzureStorage(AzureStorage):
     location = "media"
     file_overwrite = False
 {%- endif %}

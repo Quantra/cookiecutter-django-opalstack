@@ -54,9 +54,13 @@ class OpalstackHelper:
         self.create_dotenv()
 
         # set django settings environment variable in .bash_profile
-        self.logger.info("Adding django settings environment variable to ~/.bash_profile")
+        self.logger.info(
+            "Adding django settings environment variable to ~/.bash_profile"
+        )
         self.set_bash_env_var()
-        self.logger.info("Django settings environment variable added to ~/.bash_profile!")
+        self.logger.info(
+            "Django settings environment variable added to ~/.bash_profile!"
+        )
 
         # migrate db
         self.logger.info("Migrating database...")
@@ -149,7 +153,7 @@ class OpalstackHelper:
         Set an environment variable in .bash_profile so when the user logs in via SSH manage.py commands use
         production settings.
         """
-        env_var = "DJANGO_SETTINGS_MODULE=\"config.settings.production\"; export DJANGO_SETTINGS_MODULE"
+        env_var = 'DJANGO_SETTINGS_MODULE="config.settings.production"; export DJANGO_SETTINGS_MODULE'
 
         bash_path = Path.home() / ".bash_profile"
         bash_profile = bash_path.read_text()
@@ -213,7 +217,9 @@ class OpalstackHelper:
         self.logger.info("Setting sites initial...")
         from django.contrib.sites.models import Site
 
-        Site.objects.all().update(domain=self.settings.ALLOWED_HOSTS[0], name=self.settings.ALLOWED_HOSTS[0])
+        Site.objects.all().update(
+            domain=self.settings.ALLOWED_HOSTS[0], name=self.settings.ALLOWED_HOSTS[0]
+        )
         self.logger.info("Sites initial set!")
 
     def restart_wsgi(self):
