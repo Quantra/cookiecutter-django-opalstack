@@ -4,7 +4,7 @@
   "description": "Behold My Awesome Project!",
   "author_name": "Morello Apps",
   "domain_name": "example.com",
-  "email": "{{ cookiecutter.author_name.lower()|replace(' ', '-') }}@example.com",
+  "email": "{{ cookiecutter.author_name.lower() | trim() |replace(' ', '-') }}@{{ cookiecutter.domain_name.lower() | trim() }}",
   "opalstack_shell_user": "{{ cookiecutter.project_slug }}",
   "opalstack_django_app": "{{ cookiecutter.opalstack_shell_user.lower()[:2] }}_django",
   "opalstack_static_app": "{{ cookiecutter.opalstack_shell_user.lower()[:2] }}_static",

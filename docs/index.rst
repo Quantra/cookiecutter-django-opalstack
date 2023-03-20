@@ -26,6 +26,7 @@ Contents
    websocket
    faq
    troubleshooting
+   contributing
 
 Indices and tables
 ------------------
