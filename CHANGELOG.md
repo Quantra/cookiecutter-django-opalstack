@@ -3,6 +3,37 @@ All enhancements and patches to Cookiecutter Django will be documented in this f
 
 <!-- GENERATOR_PLACEHOLDER -->
 
+## 2023.03.27
+
+### Updated
+- Update watchfiles to 0.19.0 ([#4232](https://github.com/cookiecutter/cookiecutter-django/pull/4232))
+
+## 2023.03.26
+
+### Updated
+- Update pre-commit to 3.2.1 ([#4229](https://github.com/cookiecutter/cookiecutter-django/pull/4229))
+
+## 2023.03.25
+
+### Updated
+- Update pytz to 2023.2 ([#4228](https://github.com/cookiecutter/cookiecutter-django/pull/4228))
+
+## 2023.03.23
+
+### Updated
+- Bump traefik from 2.9.8 to 2.9.9 ([#4225](https://github.com/cookiecutter/cookiecutter-django/pull/4225))
+
+## 2023.03.22
+
+### Updated
+- Update redis to 4.5.3 ([#4227](https://github.com/cookiecutter/cookiecutter-django/pull/4227))
+
+## 2023.03.20
+
+### Updated
+- Update django-allauth to 0.53.1 ([#4223](https://github.com/cookiecutter/cookiecutter-django/pull/4223))
+- Update redis to 4.5.2 ([#4222](https://github.com/cookiecutter/cookiecutter-django/pull/4222))
+
 ## 2023.03.18
 
 ### Updated
