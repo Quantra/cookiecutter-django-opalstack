@@ -45,6 +45,24 @@ def remove_gplv3_files():
         os.remove(file_name)
 
 
+def remove_custom_user_manager_files():
+    os.remove(
+        os.path.join(
+            "{{cookiecutter.project_slug}}",
+            "users",
+            "managers.py",
+        )
+    )
+    os.remove(
+        os.path.join(
+            "{{cookiecutter.project_slug}}",
+            "users",
+            "tests",
+            "test_managers.py",
+        )
+    )
+
+
 def remove_pycharm_files():
     idea_dir_path = ".idea"
     if os.path.exists(idea_dir_path):
@@ -74,10 +92,7 @@ def remove_utility_files():
 def remove_heroku_files():
     file_names = ["Procfile", "runtime.txt", "requirements.txt"]
     for file_name in file_names:
-        if (
-            file_name == "requirements.txt"
-            and "{{ cookiecutter.ci_tool }}".lower() == "travis"
-        ):
+        if file_name == "requirements.txt" and "{{ cookiecutter.ci_tool }}".lower() == "travis":
             # don't remove the file if we are using travisci but not using heroku
             continue
         os.remove(file_name)
@@ -179,11 +194,7 @@ def handle_js_runner(choice, use_docker, use_async):
             "gulp-uglify-es",
         ]
         if not use_docker:
-            dev_django_cmd = (
-                "uvicorn config.asgi:application --reload"
-                if use_async
-                else "python manage.py runserver_plus"
-            )
+            dev_django_cmd = "uvicorn config.asgi:application --reload" if use_async else "python manage.py runserver"
             scripts.update(
                 {
                     "dev": "concurrently npm:dev:*",
@@ -201,9 +212,7 @@ def remove_celery_files():
     file_names = [
         os.path.join("config", "celery_app.py"),
         os.path.join("{{ cookiecutter.project_slug }}", "users", "tasks.py"),
-        os.path.join(
-            "{{ cookiecutter.project_slug }}", "users", "tests", "test_tasks.py"
-        ),
+        os.path.join("{{ cookiecutter.project_slug }}", "users", "tests", "test_tasks.py"),
     ]
     for file_name in file_names:
         os.remove(file_name)
@@ -230,9 +239,7 @@ def remove_dotgithub_folder():
     shutil.rmtree(".github")
 
 
-def generate_random_string(
-    length, using_digits=False, using_ascii_letters=False, using_punctuation=False
-):
+def generate_random_string(length, using_digits=False, using_ascii_letters=False, using_punctuation=False):
     """
     Example:
         opting out for 50 symbol-long, [a-z][A-Z][0-9] string
@@ -326,9 +333,7 @@ def set_postgres_password(file_path, value=None):
 
 
 def set_celery_flower_user(file_path, value):
-    celery_flower_user = set_flag(
-        file_path, "!!!SET CELERY_FLOWER_USER!!!", value=value
-    )
+    celery_flower_user = set_flag(file_path, "!!!SET CELERY_FLOWER_USER!!!", value=value)
     return celery_flower_user
 
 
@@ -360,22 +365,14 @@ def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
     set_django_admin_url(production_django_envs_path)
 
     set_postgres_user(local_postgres_envs_path, value=postgres_user)
-    set_postgres_password(
-        local_postgres_envs_path, value=DEBUG_VALUE if debug else None
-    )
+    set_postgres_password(local_postgres_envs_path, value=DEBUG_VALUE if debug else None)
     set_postgres_user(production_postgres_envs_path, value=postgres_user)
-    set_postgres_password(
-        production_postgres_envs_path, value=DEBUG_VALUE if debug else None
-    )
+    set_postgres_password(production_postgres_envs_path, value=DEBUG_VALUE if debug else None)
 
     set_celery_flower_user(local_django_envs_path, value=celery_flower_user)
-    set_celery_flower_password(
-        local_django_envs_path, value=DEBUG_VALUE if debug else None
-    )
+    set_celery_flower_password(local_django_envs_path, value=DEBUG_VALUE if debug else None)
     set_celery_flower_user(production_django_envs_path, value=celery_flower_user)
-    set_celery_flower_password(
-        production_django_envs_path, value=DEBUG_VALUE if debug else None
-    )
+    set_celery_flower_password(production_django_envs_path, value=DEBUG_VALUE if debug else None)
 
 
 def set_flags_in_settings_files():
@@ -405,21 +402,9 @@ def remove_aws_dockerfile():
 def remove_drf_starter_files():
     os.remove(os.path.join("config", "api_router.py"))
     shutil.rmtree(os.path.join("{{cookiecutter.project_slug}}", "users", "api"))
-    os.remove(
-        os.path.join(
-            "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_urls.py"
-        )
-    )
-    os.remove(
-        os.path.join(
-            "{{cookiecutter.project_slug}}", "users", "tests", "test_drf_views.py"
-        )
-    )
-    os.remove(
-        os.path.join(
-            "{{cookiecutter.project_slug}}", "users", "tests", "test_swagger.py"
-        )
-    )
+    os.remove(os.path.join("{{cookiecutter.project_slug}}", "users", "tests", "test_drf_urls.py"))
+    os.remove(os.path.join("{{cookiecutter.project_slug}}", "users", "tests", "test_drf_views.py"))
+    os.remove(os.path.join("{{cookiecutter.project_slug}}", "users", "tests", "test_swagger.py"))
 
 
 def remove_storages_module():
@@ -441,6 +426,9 @@ def main():
     if "{{ cookiecutter.open_source_license}}" != "GPLv3":
         remove_gplv3_files()
 
+    if "{{ cookiecutter.username_type }}" == "username":
+        remove_custom_user_manager_files()
+
     if "{{ cookiecutter.use_pycharm }}".lower() == "n":
         remove_pycharm_files()
 
@@ -449,10 +437,7 @@ def main():
     else:
         remove_docker_files()
 
-    if (
-        "{{ cookiecutter.use_docker }}".lower() == "y"
-        and "{{ cookiecutter.cloud_provider}}" != "AWS"
-    ):
+    if "{{ cookiecutter.use_docker }}".lower() == "y" and "{{ cookiecutter.cloud_provider}}" != "AWS":
         remove_aws_dockerfile()
 
     remove_heroku_files()

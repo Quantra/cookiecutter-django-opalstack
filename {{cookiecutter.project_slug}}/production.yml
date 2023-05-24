@@ -60,10 +60,10 @@ services:
     volumes:
       - production_traefik:/etc/traefik/acme
     ports:
-      - "0.0.0.0:80:80"
-      - "0.0.0.0:443:443"
+      - '0.0.0.0:80:80'
+      - '0.0.0.0:443:443'
       {%- if cookiecutter.use_celery == 'y' %}
-      - "0.0.0.0:5555:5555"
+      - '0.0.0.0:5555:5555'
       {%- endif %}
 
   redis:
@@ -97,6 +97,7 @@ services:
       - production_postgres_data_backups:/backups:z
   {%- endif %}
   {%- if cookiecutter.cloud_provider == 'None' %}
+
   nginx:
     build:
       context: .

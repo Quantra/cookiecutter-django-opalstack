@@ -1,3 +1,4 @@
+import glob
 import os
 import re
 import sys
@@ -20,6 +21,12 @@ if sys.platform.startswith("win"):
 elif sys.platform.startswith("darwin") and os.getenv("CI"):
     pytest.skip("skipping slow macOS tests on CI", allow_module_level=True)
 
+# Run auto-fixable styles checks - skipped on CI by default. These can be fixed
+# automatically by running pre-commit after generation however they are tedious
+# to fix in the template, so we don't insist too much in fixing them.
+AUTOFIXABLE_STYLES = os.getenv("AUTOFIXABLE_STYLES") == "1"
+auto_fixable = pytest.mark.skipif(not AUTOFIXABLE_STYLES, reason="auto-fixable")
+
 
 @pytest.fixture
 def context():
@@ -40,6 +47,8 @@ def context():
 
 
 SUPPORTED_COMBINATIONS = [
+    {"username_type": "username"},
+    {"username_type": "email"},
     {"open_source_license": "MIT"},
     {"open_source_license": "BSD"},
     {"open_source_license": "GPLv3"},
@@ -142,11 +151,7 @@ def _fixture_id(ctx):
 
 def build_files_list(base_dir):
     """Build a list containing absolute paths to the generated files."""
-    return [
-        os.path.join(dirpath, file_path)
-        for dirpath, subdirs, files in os.walk(base_dir)
-        for file_path in files
-    ]
+    return [os.path.join(dirpath, file_path) for dirpath, subdirs, files in os.walk(base_dir) for file_path in files]
 
 
 def check_paths(paths):
@@ -187,9 +192,10 @@ def test_flake8_passes(cookies, context_override):
         pytest.fail(e.stdout.decode())
 
 
+@auto_fixable
 @pytest.mark.parametrize("context_override", SUPPORTED_COMBINATIONS, ids=_fixture_id)
 def test_black_passes(cookies, context_override):
-    """Generated project should pass black."""
+    """Check whether generated project passes black style."""
     result = cookies.bake(extra_context=context_override)
 
     try:
@@ -199,6 +205,39 @@ def test_black_passes(cookies, context_override):
             "--exclude",
             "migrations",
             ".",
+            _cwd=str(result.project_path),
+        )
+    except sh.ErrorReturnCode as e:
+        pytest.fail(e.stdout.decode())
+
+
+@auto_fixable
+@pytest.mark.parametrize("context_override", SUPPORTED_COMBINATIONS, ids=_fixture_id)
+def test_isort_passes(cookies, context_override):
+    """Check whether generated project passes isort style."""
+    result = cookies.bake(extra_context=context_override)
+
+    try:
+        sh.isort(_cwd=str(result.project_path))
+    except sh.ErrorReturnCode as e:
+        pytest.fail(e.stdout.decode())
+
+
+@auto_fixable
+@pytest.mark.parametrize("context_override", SUPPORTED_COMBINATIONS, ids=_fixture_id)
+def test_django_upgrade_passes(cookies, context_override):
+    """Check whether generated project passes django-upgrade."""
+    result = cookies.bake(extra_context=context_override)
+
+    python_files = [
+        file_path.removeprefix(f"{result.project_path}/")
+        for file_path in glob.glob(str(result.project_path / "**" / "*.py"), recursive=True)
+    ]
+    try:
+        sh.django_upgrade(
+            "--target-version",
+            "4.1",
+            *python_files,
             _cwd=str(result.project_path),
         )
     except sh.ErrorReturnCode as e:
@@ -237,9 +276,7 @@ def test_travis_invokes_pytest(cookies, context, use_docker, expected_test_scrip
         ("y", "docker-compose -f local.yml run django pytest"),
     ],
 )
-def test_gitlab_invokes_precommit_and_pytest(
-    cookies, context, use_docker, expected_test_script
-):
+def test_gitlab_invokes_precommit_and_pytest(cookies, context, use_docker, expected_test_script):
     context.update({"ci_tool": "Gitlab", "use_docker": use_docker})
     result = cookies.bake(extra_context=context)
 
@@ -266,9 +303,7 @@ def test_gitlab_invokes_precommit_and_pytest(
         ("y", "docker-compose -f local.yml run django pytest"),
     ],
 )
-def test_github_invokes_linter_and_pytest(
-    cookies, context, use_docker, expected_test_script
-):
+def test_github_invokes_linter_and_pytest(cookies, context, use_docker, expected_test_script):
     context.update({"ci_tool": "Github", "use_docker": use_docker})
     result = cookies.bake(extra_context=context)
 

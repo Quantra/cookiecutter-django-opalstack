@@ -27,24 +27,18 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 project_slug = "{{ cookiecutter.project_slug }}"
 if hasattr(project_slug, "isidentifier"):
-    assert (
-        project_slug.isidentifier()
-    ), "'{}' project slug is not a valid Python identifier.".format(project_slug)
+    assert project_slug.isidentifier(), "'{}' project slug is not a valid Python identifier.".format(project_slug)
 
-assert (
-    project_slug == project_slug.lower()
-), "'{}' project slug should be all lowercase".format(project_slug)
+assert project_slug == project_slug.lower(), "'{}' project slug should be all lowercase".format(project_slug)
 
-assert (
-    "\\" not in "{{ cookiecutter.author_name }}"
-), "Don't include backslashes in author name."
+assert "\\" not in "{{ cookiecutter.author_name }}", "Don't include backslashes in author name."
 
 if "{{ cookiecutter.use_docker }}".lower() == "n":
     python_major_version = sys.version_info[0]
     if python_major_version == 2:
         print(
             WARNING + "You're running cookiecutter under Python 2, but the generated "
-            "project requires Python 3.10+. Do you want to proceed (y/n)? " + TERMINATOR
+            "project requires Python 3.11+. Do you want to proceed (y/n)? " + TERMINATOR
         )
         yes_options, no_options = frozenset(["y"]), frozenset(["n"])
         while True:
@@ -59,22 +53,12 @@ if "{{ cookiecutter.use_docker }}".lower() == "n":
                 print(
                     HINT
                     + "Please respond with {} or {}: ".format(
-                        ", ".join(
-                            ["'{}'".format(o) for o in yes_options if not o == ""]
-                        ),
-                        ", ".join(
-                            ["'{}'".format(o) for o in no_options if not o == ""]
-                        ),
+                        ", ".join(["'{}'".format(o) for o in yes_options if not o == ""]),
+                        ", ".join(["'{}'".format(o) for o in no_options if not o == ""]),
                     )
                     + TERMINATOR
                 )
 
-if (
-    "{{ cookiecutter.mail_service }}" == "Amazon SES"
-    and "{{ cookiecutter.cloud_provider }}" != "AWS"
-):
-    print(
-        "You should either use AWS or select a different "
-        "Mail Service for sending emails."
-    )
+if "{{ cookiecutter.mail_service }}" == "Amazon SES" and "{{ cookiecutter.cloud_provider }}" != "AWS":
+    print("You should either use AWS or select a different " "Mail Service for sending emails.")
     sys.exit(1)

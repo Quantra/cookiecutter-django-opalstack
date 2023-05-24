@@ -76,8 +76,8 @@ accept and merge pull requests.
   </tr>
 </table>
 
-*Audrey is also the creator of Cookiecutter. Audrey and Daniel are on
-the Cookiecutter core team.*
+_Audrey is also the creator of Cookiecutter. Audrey and Daniel are on
+the Cookiecutter core team._
 
 ## Other Contributors
 
@@ -366,6 +366,13 @@ Listed in alphabetical order.
     <td>Bert de Miranda</td>
     <td>
       <a href="https://github.com/bertdemiranda">bertdemiranda</a>
+    </td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Birtibu</td>
+    <td>
+      <a href="https://github.com/Birtibu">Birtibu</a>
     </td>
     <td></td>
   </tr>
@@ -1427,6 +1434,13 @@ Listed in alphabetical order.
     <td></td>
   </tr>
   <tr>
+    <td>Morten Kaae</td>
+    <td>
+      <a href="https://github.com/MortenKaae">MortenKaae</a>
+    </td>
+    <td></td>
+  </tr>
+  <tr>
     <td>mozillazg</td>
     <td>
       <a href="https://github.com/mozillazg">mozillazg</a>
@@ -1958,6 +1972,6 @@ Listed in alphabetical order.
 The following haven't provided code directly, but have provided
 guidance and advice.
 
--   Jannis Leidel
--   Nate Aune
--   Barry Morrison
+- Jannis Leidel
+- Nate Aune
+- Barry Morrison
