@@ -95,7 +95,6 @@ class OpalstackHelper:
     def install_requirements(self):
         """
         Install requirements into the current venv from requirements/production.txt
-        :return:
         """
         self.logger.info("Installing requirements from requirements/production.txt...")
         subprocess.run(
@@ -114,7 +113,6 @@ class OpalstackHelper:
         """
         Write environment variables to .env file.
         The user is required to input the value for each environment variable.
-        :return:
         """
         self.logger.info("Creating .env file...")
         dotenv_path = self.root_path / ".env"
@@ -167,7 +165,6 @@ class OpalstackHelper:
     def configure_uwsgi(self):
         """
         Rewrite the ../uwsgi.ini file with correct paths for this project.
-        :return:
         """
         self.logger.info("Configuring uwsgi.ini...")
 
@@ -184,16 +181,22 @@ class OpalstackHelper:
     def configure_memcached(self):
         """
         Create a cronjob for starting and persisting memcached.
-        :return:
         """
         self.logger.info("Configuring memcached...")
 
-        cronjob = (
-            '* * * * * /usr/bin/pgrep -f "memcached -d -s $HOME/apps/{parent_path}/memcached.sock" > '
-            "/dev/null || memcached -d -s $HOME/apps/{parent_path}/memcached.sock -P "
-            "$HOME/apps/{parent_path}/memcached.pid -m 100\n"
-        ).format(parent_path=self.parent_path.name)
+        cron_script_path = self.parent_path / "memcached_cron"
+        self.make_files([cron_script_path])
 
+        cron_script = (
+            '#!/bin/bash\n\n/usr/bin/pgrep -f "memcached -d -s $HOME/apps/{parent_path}/memcached.sock" > '
+            "/dev/null || memcached -d -s $HOME/apps/{parent_path}/memcached.sock -P $HOME/apps/{"
+            "parent_path}/memcached.pid -m 100\n"
+        ).format(parent_path=self.parent_path.name)
+        cron_script_path.write_text(cron_script)
+
+        cronjob = "* * * * * $HOME/apps/{parent_path}/memcached_cron".format(
+            parent_path=parent_path.name
+        )
         self.add_cronjob(cronjob)
 
         self.logger.info("Memcached configured!")
@@ -225,7 +228,6 @@ class OpalstackHelper:
     def restart_wsgi(self):
         """
         Restart the WSGI server.
-        :return:
         """
         self.logger.info("Restaring WSGI server...")
         subprocess.run([f"{self.parent_path / 'stop'}"])
@@ -236,7 +238,6 @@ class OpalstackHelper:
         """
         Configure database backups as per Opalstack docs.
         https://docs.opalstack.com/user-guide/postgresql-databases/#scheduled-backups-for-postgresql-databases
-        :return:
         """
         self.logger.info("Configuring daily database backups...")
 
@@ -283,9 +284,6 @@ class OpalstackHelper:
     def make_paths(self, paths, mode=0o700):
         """
         Make all paths in paths list and chmod them to the desired value.
-        :param paths:
-        :param mode:
-        :return:
         """
         for path in paths:
             path.mkdir(parents=True, exist_ok=True)
@@ -303,15 +301,12 @@ class OpalstackHelper:
     def random_cron_daily(self):
         """
         Random hour and minute for daily cronjobs.  Hour is between 0 & 5
-        :return:
         """
         return f"{randint(0, 59)} {randint(0, 5)} * * *"
 
     def add_cronjob(self, cronjob):
         """
         Add a cronjob to crontab.
-        :param cronjob:
-        :return:
         """
         crontab = subprocess.run(
             ["crontab", "-l"], capture_output=True, text=True
@@ -334,7 +329,6 @@ class OpalstackHelper:
         Just keeping this in a property to keep it out the way near the end of the class.
         The script is taken from:
         https://docs.opalstack.com/user-guide/postgresql-databases/#scheduled-backups-for-postgresql-databases
-        :return:
         """
         return (
             "#!/bin/bash\n"
