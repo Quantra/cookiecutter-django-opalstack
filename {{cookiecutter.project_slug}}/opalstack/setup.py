@@ -191,7 +191,7 @@ class OpalstackHelper:
         cronjob = (
             '* * * * * /usr/bin/pgrep -f "memcached -d -s $HOME/apps/{parent_path}/memcached.sock" > '
             "/dev/null || memcached -d -s $HOME/apps/{parent_path}/memcached.sock -P "
-            "$HOME/apps/{parent_path}/memcached.pid -M 100\n"
+            "$HOME/apps/{parent_path}/memcached.pid -m 100\n"
         ).format(parent_path=self.parent_path.name)
 
         self.add_cronjob(cronjob)
