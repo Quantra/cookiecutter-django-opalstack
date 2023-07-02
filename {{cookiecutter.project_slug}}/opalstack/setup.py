@@ -195,7 +195,7 @@ class OpalstackHelper:
         cron_script_path.write_text(cron_script)
 
         cronjob = "* * * * * $HOME/apps/{parent_path}/memcached_cron".format(
-            parent_path=parent_path.name
+            parent_path=self.parent_path.name
         )
         self.add_cronjob(cronjob)
 
